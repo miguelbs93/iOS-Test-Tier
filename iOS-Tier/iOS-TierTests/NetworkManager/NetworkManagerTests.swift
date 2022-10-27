@@ -63,7 +63,6 @@ final class NetworkManagerTests: XCTestCase {
         let components = url?.parametersComponents
         XCTAssertNotNil(components)
         XCTAssertEqual(components!["apiKey"], "9ef7d5b3-21c7-4a78-a92b-91efef42cabb")
-        
     }
     
 }
