@@ -15,19 +15,12 @@ enum NetworkError: Error {
     case unknown
 }
 
-protocol NetworkHandler {
+protocol Dispatcher {
     func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void)
 }
 
-typealias APIHandler = NetworkHandler & ResponseHandler
-
-class NetworkLoader: APIHandler {
-    
-    let session: URLSession
-    
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
+struct NetworkDispatcher: Dispatcher {
+    private var session: URLSession = URLSession(configuration: URLSessionConfiguration.default)
     
     func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void) {
         do {
@@ -45,9 +38,17 @@ class NetworkLoader: APIHandler {
             completion(nil, error as? NetworkError)
         }
     }
+}
+
+class NetworkManager: ResponseHandler {
+    let dispatcher: Dispatcher
+    
+    init(dispatcher: Dispatcher = NetworkDispatcher()) {
+        self.dispatcher = dispatcher
+    }
     
     public func execute<T: Decodable>(request: Request, resultType: T.Type, completion: @escaping (Result<T?, NetworkError>) -> Void) {
-        fetchData(with: request) {[weak self] data, error in
+        dispatcher.fetchData(with: request) {[weak self] data, error in
             guard let data = data else {
                 completion(.failure(.noData))
                 return
