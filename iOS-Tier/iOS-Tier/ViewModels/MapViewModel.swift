@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 
 final class MapViewModel {
-    private var dispatcher: Dispatcher
+    private var loader: NetworkLoader
     private var scooters: [Vehicle]?
     private var annotations: [MapPin]?
     private var currentLocation: CLLocationCoordinate2D? {
@@ -32,14 +32,14 @@ final class MapViewModel {
         CLLocationCoordinate2D(latitude: 52.5200, longitude: 13.4050)
     }
     
-    init(dispatcher: Dispatcher = NetworkDispatcher()) {
-        self.dispatcher = dispatcher
+    init(loader: NetworkLoader = NetworkLoader()) {
+        self.loader = loader
         setupLocationManagerBindings()
     }
     
     func fetchVehicles() {
-        let request = Vehicles.fetchVehicles
-        dispatcher.execute(request: request, resultType: FetchVehiclesResponse.self) {[weak self] result in
+        let request = VehiclesRequest.fetchVehicles
+        loader.execute(request: request, resultType: FetchVehiclesResponse.self) {[weak self] result in
             switch result {
             case .success(let data):
                 guard let data = data else {

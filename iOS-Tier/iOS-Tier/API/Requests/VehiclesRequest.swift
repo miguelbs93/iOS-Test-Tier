@@ -1,5 +1,5 @@
 //
-//  Vehicles.swift
+//  VehiclesRequest.swift
 //  iOS-Tier
 //
 //  Created by Miguel Bou Sleiman on 25.10.22.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum Vehicles {
+enum VehiclesRequest {
     case fetchVehicles
 }
 
-extension Vehicles: Request {
+extension VehiclesRequest: Request {
     var path: String {
         switch self {
         case .fetchVehicles:
