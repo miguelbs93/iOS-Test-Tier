@@ -15,32 +15,50 @@ enum NetworkError: Error {
     case unknown
 }
 
-class NetworkLoader: ResponseHandler {
+protocol NetworkHandler {
+    func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void)
+}
+
+typealias APIHandler = NetworkHandler & ResponseHandler
+
+class NetworkLoader: APIHandler {
+    
     let session: URLSession
     
     init(session: URLSession = .shared) {
         self.session = session
     }
     
-    public func execute<T: Decodable>(request: Request, resultType: T.Type, completion: @escaping (Result<T?, NetworkError>) -> Void) {
+    func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void) {
         do {
             let req = try request.prepareURLRequest()
-            let dataTask = session.dataTask(with: req, completionHandler: {[weak self] (data, urlResponse, error) in
+            let dataTask = session.dataTask(with: req, completionHandler: { (data, urlResponse, error) in
                 guard let data = data else {
-                    completion(.failure(.noData))
+                    completion(nil, nil)
                     return
                 }
-                do {
-                    let responseObject = try self?.parseResponse(data: data, type: T.self)
-                    completion(.success(responseObject))
-                } catch {
-                    completion(.failure(error as! NetworkError))
-                }
+                completion(data, nil)
             })
             
             dataTask.resume()
         } catch {
-            completion(.failure(error as! NetworkError))
+            completion(nil, error as? NetworkError)
+        }
+    }
+    
+    public func execute<T: Decodable>(request: Request, resultType: T.Type, completion: @escaping (Result<T?, NetworkError>) -> Void) {
+        fetchData(with: request) {[weak self] data, error in
+            guard let data = data else {
+                completion(.failure(.noData))
+                return
+            }
+            
+            do {
+                let responseObject = try self?.parseResponse(data: data, type: T.self)
+                completion(.success(responseObject))
+            } catch {
+                completion(.failure(error as! NetworkError))
+            }
         }
     }
     
