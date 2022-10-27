@@ -37,6 +37,7 @@
 		ADBEF74B29091981001C94A8 /* Font+Extras.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF74A29091981001C94A8 /* Font+Extras.swift */; };
 		ADBEF74D2909A6E7001C94A8 /* MapPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADBEF74C2909A6E7001C94A8 /* MapPin.swift */; };
 		ADC6C922290B2E8300BC4EEA /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C921290B2E8300BC4EEA /* URL+Extensions.swift */; };
+		ADC6C925290B314200BC4EEA /* MapViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C924290B314200BC4EEA /* MapViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		ADBEF74A29091981001C94A8 /* Font+Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extras.swift"; sourceTree = "<group>"; };
 		ADBEF74C2909A6E7001C94A8 /* MapPin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPin.swift; sourceTree = "<group>"; };
 		ADC6C921290B2E8300BC4EEA /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
+		ADC6C924290B314200BC4EEA /* MapViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModelTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 		AD3056DE2906C41E00AF7EDE /* iOS-TierTests */ = {
 			isa = PBXGroup;
 			children = (
+				ADC6C923290B312E00BC4EEA /* MapView */,
 				ADB1FEAA290B293F00AB29C7 /* Stubs */,
 				ADB1FEA9290B293600AB29C7 /* NetworkManager */,
 				AD3056DF2906C41E00AF7EDE /* iOS_TierTests.swift */,
@@ -308,6 +311,14 @@
 				ADBEF7482909182B001C94A8 /* VehicleInfoView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		ADC6C923290B312E00BC4EEA /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				ADC6C924290B314200BC4EEA /* MapViewModelTests.swift */,
+			);
+			path = MapView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -473,6 +484,7 @@
 				ADB1FEAE290B2A5400AB29C7 /* NetworkManagerTests.swift in Sources */,
 				AD3056E02906C41E00AF7EDE /* iOS_TierTests.swift in Sources */,
 				ADB1FEAC290B295800AB29C7 /* NetworkDispatcherMockup.swift in Sources */,
+				ADC6C925290B314200BC4EEA /* MapViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

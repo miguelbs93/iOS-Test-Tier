@@ -39,7 +39,7 @@ final class MapViewModel {
     
     func fetchVehicles() {
         let request = VehiclesRequest.fetchVehicles
-        loader.execute(request: request, resultType: FetchVehiclesResponse.self) {[weak self] result in
+        manager.execute(request: request, resultType: FetchVehiclesResponse.self) {[weak self] result in
             switch result {
             case .success(let data):
                 guard let data = data else {
