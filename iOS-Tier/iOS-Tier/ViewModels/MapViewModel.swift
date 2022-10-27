@@ -9,7 +9,7 @@ import Foundation
 import CoreLocation
 
 final class MapViewModel {
-    private var loader: NetworkManager
+    private var manager: NetworkManager
     private var scooters: [Vehicle]?
     private var annotations: [MapPin]?
     private var currentLocation: CLLocationCoordinate2D? {
@@ -32,8 +32,8 @@ final class MapViewModel {
         CLLocationCoordinate2D(latitude: 52.5200, longitude: 13.4050)
     }
     
-    init(loader: NetworkManager = NetworkManager()) {
-        self.loader = loader
+    init(manager: NetworkManager = NetworkManager()) {
+        self.manager = manager
         setupLocationManagerBindings()
     }
     
