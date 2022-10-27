@@ -14,7 +14,7 @@ class PullUpControl {
         case expanded
     }
     
-    private var state: PullUpState = .collapsed
+    var state: PullUpState = .collapsed
     
     private var widthView: CGFloat {
         UIScreen.main.bounds.width
@@ -25,24 +25,34 @@ class PullUpControl {
     
     var visualEffectView:UIVisualEffectView!
     
+    var runningAnimations = [UIViewPropertyAnimator]()
+    var animationProgressWhenInterrupted:CGFloat = 0
+    
     public weak var dataSource: PullUpControlDataSource?
     public weak var delegate: PullUpControlDelegate?
+  
+    var endCardHeight:CGFloat = 0.0
+    var startCardHeight:CGFloat = 0.0
     
-    private var topAnchor: NSLayoutConstraint?
+    var topAnchor: NSLayoutConstraint?
     
     private var defaultHeight: CGFloat {
         UIScreen.main.bounds.height * 0.7
     }
     
     public func setupCard(from view: UIView) {
+        endCardHeight = dataSource?.pullUpViewExpandedViewHeight() ?? defaultHeight
+        startCardHeight = 0.0
+        
         parentView = view
         
-        visualEffectView = UIVisualEffectView()
-
         //setup pullUpVC
-        guard let safePullUpViewController = dataSource?.pullUpViewController() else {return}
-        pullUpVC = safePullUpViewController
+        guard let pullUpViewController = dataSource?.pullUpViewController() else {return}
+        pullUpVC = pullUpViewController
         pullUpVC.view.translatesAutoresizingMaskIntoConstraints = false
+        pullUpVC.view.isHidden = true
+        
+        pullUpVC.view.frame = CGRect(x: 0, y: UIScreen.main.bounds.height, width: widthView, height: endCardHeight)
         
         view.addSubview(pullUpVC.view)
         setupConstraints()
@@ -50,14 +60,12 @@ class PullUpControl {
         pullUpVC.view.clipsToBounds = true
         pullUpVC.view.layer.cornerRadius = 15
         
-        //add tap gesture
         setupPanGesture()
     }
     
     private func setupConstraints() {
         guard let pullUpView = pullUpVC.view,
               let parentView = parentView else { return }
-        
         let height = dataSource?.pullUpViewExpandedViewHeight() ?? defaultHeight
         let heightAnchor = pullUpView.heightAnchor.constraint(equalToConstant: height)
         topAnchor = pullUpView.topAnchor.constraint(equalTo: parentView.bottomAnchor)
@@ -75,29 +83,30 @@ class PullUpControl {
 // MARK: Show/Hide
 extension PullUpControl {
     
-    public func show(completion: @escaping (Bool) -> Void) {
+    public func show(completion: ((Bool) -> Void)? = nil) {
         //check if the view is already shown in the view
         guard state == .collapsed else { return }
+        pullUpVC.view.isHidden = false
         let height = dataSource?.pullUpViewExpandedViewHeight() ?? defaultHeight
-        topAnchor?.constant -= height
+        topAnchor?.constant = -height
         updateViewLayout {[weak self] success in
             self?.state = .expanded
-            completion(success)
+            completion?(success)
         }
     }
     
-    public func hide(completion: @escaping (Bool) -> Void) {
+    public func hide(completion: ((Bool) -> Void)? = nil) {
         guard state == .expanded else { return }
         topAnchor?.constant = 0
         updateViewLayout {[weak self] success in
             self?.state = .collapsed
-            completion(success)
+            completion?(success)
         }
     }
     
     private func updateViewLayout(completion: @escaping (Bool) -> Void) {
         UIView.animate(withDuration: 0.5) {[weak self] in
-            self?.pullUpVC.view.layoutIfNeeded()
+            self?.parentView?.layoutIfNeeded()
         } completion: { success in
             completion(success)
         }
@@ -109,19 +118,28 @@ extension PullUpControl {
 extension PullUpControl {
     
     private func setupPanGesture() {
-        let handleArea = delegate?.pullUpHandleArea(pullUpVC)
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(recognizer:)))
-        handleArea?.addGestureRecognizer(panGestureRecognizer)
+        pullUpVC.view.addGestureRecognizer(panGestureRecognizer)
     }
     
     @objc private func handlePanGesture(recognizer: UIPanGestureRecognizer) {
+        let translation = recognizer.translation(in: self.pullUpVC.view)
         switch recognizer.state {
         case .began:
             break
+            
         case .changed:
-            break
+            guard translation.y > 0 else { return }
+            pullUpVC.view.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            
         case .ended:
-            break
+            guard translation.y > 0 else { return }
+            pullUpVC.view.transform = CGAffineTransform(translationX: 0, y: endCardHeight)
+            hide {[weak self] _ in
+                self?.pullUpVC.view.transform = .identity
+                self?.delegate?.didDismissPullUpControl()
+            }
+            
         default:
             break
         }

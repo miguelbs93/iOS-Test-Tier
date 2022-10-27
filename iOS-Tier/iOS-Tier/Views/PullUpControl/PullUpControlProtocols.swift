@@ -7,12 +7,11 @@
 
 import UIKit
 
-protocol PullUpControlDelegate: AnyObject {
-    func pullUpHandleArea(_ sender: UIViewController) -> UIView
-}
-
 protocol PullUpControlDataSource: AnyObject {
     func pullUpViewController() -> UIViewController
     func pullUpViewExpandedViewHeight() -> CGFloat
-    func pullUpViewCollapsedViewHeight() -> CGFloat
+}
+
+protocol PullUpControlDelegate: AnyObject {
+    func didDismissPullUpControl()
 }
