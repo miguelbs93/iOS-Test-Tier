@@ -1,5 +1,5 @@
 //
-//  FetchVehicles.swift
+//  Vehicles.swift
 //  iOS-Tier
 //
 //  Created by Miguel Bou Sleiman on 25.10.22.
@@ -11,12 +11,11 @@ enum Vehicles {
     case fetchVehicles
 }
 
-extension Vehicles {
-    
+extension Vehicles: Request {
     var path: String {
         switch self {
         case .fetchVehicles:
-            return ""
+            return "?apiKey=\(APIConstants.apiKey)"
         }
     }
     
@@ -27,12 +26,11 @@ extension Vehicles {
     var parameters: RequestParams {
         switch self {
         case .fetchVehicles:
-            return .url(["apiKey" : APIConstants.apiKey])
+            return .url(nil)
         }
     }
     
     var headers: [String : Any]? {
         [:]
     }
-    
 }

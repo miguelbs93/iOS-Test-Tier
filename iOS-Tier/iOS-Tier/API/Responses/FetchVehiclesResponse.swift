@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct FetchVehiclesResponse: Decodable {
+    let data: [Vehicle]
+}

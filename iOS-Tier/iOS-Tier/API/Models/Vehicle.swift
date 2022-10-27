@@ -6,3 +6,18 @@
 //
 
 import Foundation
+
+struct Vehicle: Decodable {
+    let type: String
+    let id: String
+    let attributes: VehicleAttributes
+}
+
+struct VehicleAttributes: Decodable {
+    let batteryLevel: Int
+    let lat: Double
+    let lng: Double
+    let maxSpeed: Int
+    let vehicleType: String
+    let hasHelmetBox: Bool
+}
