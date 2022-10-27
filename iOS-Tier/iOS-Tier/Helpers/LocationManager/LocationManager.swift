@@ -8,57 +8,67 @@
 import CoreLocation
 import Foundation
 
-enum LocationManagerErrors: Error {
-    case success
+enum LocationManagerError: Error {
     case locationServicesDisabled
-    case permissionDisabled
+    case denied
+    case restricted
+    case managerError
     
     var localizedDescription: String {
         switch self {
-        case .success:
-            return ""
         case .locationServicesDisabled:
-            return ""
-        case .permissionDisabled:
-            return ""
-        }
-    }
-}
-
-protocol LocationRequestManager {
-    var manager: CLLocationManager { get set }
-    func checkLocationServices()
-    func checkLocationAuthorization()
-}
-
-// MARK: Implementaion
-
-extension LocationRequestManager {
-    
-    func checkLocationServices(completion: @escaping (LocationManagerErrors) -> Void) {
-        if CLLocationManager.locationServicesEnabled() {
-            checkLocationAuthorization(completion: completion)
-        } else {
-            completion(.locationServicesDisabled)
-        }
-    }
-    
-    func checkLocationAuthorization(completion: @escaping (LocationManagerErrors) -> Void) {
-        switch manager.authorizationStatus {
-        case .authorizedWhenInUse:
-            completion(.success)
+            return "Location Services Disabled!"
         case .denied:
-            completion(.permissionDisabled)
+            return "Location Access Request Denied!"
+        case .restricted:
+            return "Location access restricted, go to the settings and update it to try again!"
+        case .managerError:
+            return "Location Manager Error!"
+        }
+    }
+}
+
+final class LocationManager: NSObject {
+    private lazy var manager: CLLocationManager = {
+        let manager = CLLocationManager()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        return manager
+    }()
+    
+    var locationHandler: ((CLLocationCoordinate2D?) -> Void)?
+    var locationPermissionErrorHandler: ((LocationManagerError?) -> Void)?
+    
+    var currentLocation: CLLocationCoordinate2D? {
+        manager.location?.coordinate
+    }
+    
+    func checkLocationPermission(completion: ((LocationManagerError?) -> Void)? = nil) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            completion?(nil)
+            
+        case .denied:
+            completion?(.denied)
+            
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
-            completion(.success)
-        case .restricted: // Show an alert letting them know what’s up
-            break
-        case .authorizedAlways:
-            completion(.success)
+            
+        case .restricted:
+            completion?(.restricted)
+            
         @unknown default:
             break
         }
     }
-    
+}
+
+
+// MARK: CLLocationManager Delegate
+extension LocationManager: CLLocationManagerDelegate {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        checkLocationPermission {[weak self] error in
+            self?.locationPermissionErrorHandler?(error)
+        }
+    }
 }
