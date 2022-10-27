@@ -56,7 +56,7 @@ final class MapViewModel {
     func fetchVehicles(completion: (() -> Void)? = nil) {
         fetchVehicles {[weak self] vehicles, error in
             guard error == nil else {
-                self?.showErrorHandler?("Error", error!.localizedDescription)
+                self?.showErrorHandler?("Error", error!.message)
                 return
             }
             

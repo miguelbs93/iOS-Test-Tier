@@ -12,7 +12,17 @@ enum NetworkError: Error {
     case decodingError
     case incorrectURL
     case noData
+    case noConnection
     case unknown
+    
+    var message: String {
+        switch self {
+        case .noConnection:
+            return "Kindly check your internet connection and try again later!"
+        default:
+            return "An error occured, please try again later!"
+        }
+    }
 }
 
 class NetworkManager: ResponseHandler {
@@ -24,6 +34,11 @@ class NetworkManager: ResponseHandler {
     
     public func execute<T: Decodable>(request: Request, resultType: T.Type, completion: @escaping (Result<T?, NetworkError>) -> Void) {
         dispatcher.fetchData(with: request) {[weak self] data, error in
+            guard error == nil else {
+                completion(.failure(error!))
+                return
+            }
+            
             guard let data = data else {
                 completion(.failure(.noData))
                 return

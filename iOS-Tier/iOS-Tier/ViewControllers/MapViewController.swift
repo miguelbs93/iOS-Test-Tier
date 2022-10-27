@@ -68,6 +68,10 @@ class MapViewController: UIViewController, AlertManager {
         }
         
         viewModel.showErrorHandler = {[weak self] title, message in
+            let retryAction: (() -> Void) = {[weak self] in
+                self?.viewModel.fetchVehicles()
+            }
+            let actions = ["Retry" : retryAction]
             self?.showAlertWith(title: title ?? "Error",
                                 message: message ?? "An error occured, please try again later!")
         }
@@ -103,13 +107,10 @@ class MapViewController: UIViewController, AlertManager {
 // MARK: Location Permission Error View
 extension MapViewController {
     private func showPermissionError(with title: String, message: String, canRetry: Bool = false) {
-        var actions = [String: (() -> Void)]()
-        if canRetry {
-            let retryAction: (() -> Void) = {[weak self] in
-                self?.viewModel.fetchLocation()
-            }
-            actions = ["Retry" : retryAction]
+        let retryAction: (() -> Void) = {[weak self] in
+            self?.viewModel.fetchLocation()
         }
+        let actions = ["Retry" : retryAction]
         self.showAlertWith(title: title, message: message, actions: actions)
     }
 }

@@ -18,10 +18,18 @@ struct NetworkDispatcher: Dispatcher {
         do {
             let req = try request.prepareURLRequest()
             let dataTask = session.dataTask(with: req, completionHandler: { (data, urlResponse, error) in
+                
+                if let error = error as? URLError,
+                      error.code == URLError.Code.notConnectedToInternet {
+                    completion(nil, .noConnection)
+                    return
+                }
+                
                 guard let data = data else {
                     completion(nil, nil)
                     return
                 }
+                
                 completion(data, nil)
             })
             
