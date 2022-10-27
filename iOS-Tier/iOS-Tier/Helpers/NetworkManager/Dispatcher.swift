@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+protocol Dispatcher {
+    func execute<T: Decodable>(request: Request, resultType: T.Type, completion: @escaping (Result<T?, NetworkError>) -> Void)
+}
