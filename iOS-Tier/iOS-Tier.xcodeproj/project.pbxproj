@@ -19,6 +19,7 @@
 		AD38DE1A2909E81300272236 /* PullUpControlProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD38DE192909E81300272236 /* PullUpControlProtocols.swift */; };
 		AD38DE1F290A8E0A00272236 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD38DE1E290A8E0A00272236 /* AlertManager.swift */; };
 		ADB1FEA6290B1EAE00AB29C7 /* NetworkLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB1FEA5290B1EAE00AB29C7 /* NetworkLoader.swift */; };
+		ADB1FEA8290B290100AB29C7 /* NetworkDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB1FEA7290B290100AB29C7 /* NetworkDispatcher.swift */; };
 		ADB50F8C29078EFE001CA523 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB50F8B29078EFE001CA523 /* Constants.swift */; };
 		ADB50F8E29078F5F001CA523 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB50F8D29078F5F001CA523 /* MapViewModel.swift */; };
 		ADB50F9129079041001CA523 /* ResponseHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB50F9029079041001CA523 /* ResponseHandler.swift */; };
@@ -69,6 +70,7 @@
 		AD38DE192909E81300272236 /* PullUpControlProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullUpControlProtocols.swift; sourceTree = "<group>"; };
 		AD38DE1E290A8E0A00272236 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		ADB1FEA5290B1EAE00AB29C7 /* NetworkLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoader.swift; sourceTree = "<group>"; };
+		ADB1FEA7290B290100AB29C7 /* NetworkDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDispatcher.swift; sourceTree = "<group>"; };
 		ADB50F8B29078EFE001CA523 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		ADB50F8D29078F5F001CA523 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		ADB50F9029079041001CA523 /* ResponseHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseHandler.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				ADB50F9029079041001CA523 /* ResponseHandler.swift */,
 				ADB50F99290791CC001CA523 /* Request.swift */,
 				ADB1FEA5290B1EAE00AB29C7 /* NetworkLoader.swift */,
+				ADB1FEA7290B290100AB29C7 /* NetworkDispatcher.swift */,
 			);
 			path = NetworkManager;
 			sourceTree = "<group>";
@@ -416,6 +419,7 @@
 				ADB50FA32907CEFF001CA523 /* Vehicle.swift in Sources */,
 				AD38DE182909E36000272236 /* PullUpControl.swift in Sources */,
 				ADB50F9F29079483001CA523 /* VehiclesRequest.swift in Sources */,
+				ADB1FEA8290B290100AB29C7 /* NetworkDispatcher.swift in Sources */,
 				AD3056C92906C41A00AF7EDE /* AppDelegate.swift in Sources */,
 				ADB50F8E29078F5F001CA523 /* MapViewModel.swift in Sources */,
 				AD38DE1F290A8E0A00272236 /* AlertManager.swift in Sources */,

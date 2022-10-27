@@ -15,31 +15,6 @@ enum NetworkError: Error {
     case unknown
 }
 
-protocol Dispatcher {
-    func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void)
-}
-
-struct NetworkDispatcher: Dispatcher {
-    private var session: URLSession = URLSession(configuration: URLSessionConfiguration.default)
-    
-    func fetchData(with request: Request, completion: @escaping (Data?, NetworkError?) -> Void) {
-        do {
-            let req = try request.prepareURLRequest()
-            let dataTask = session.dataTask(with: req, completionHandler: { (data, urlResponse, error) in
-                guard let data = data else {
-                    completion(nil, nil)
-                    return
-                }
-                completion(data, nil)
-            })
-            
-            dataTask.resume()
-        } catch {
-            completion(nil, error as? NetworkError)
-        }
-    }
-}
-
 class NetworkManager: ResponseHandler {
     let dispatcher: Dispatcher
     
