@@ -23,5 +23,4 @@ class MapPin: NSObject, MKAnnotation {
         self.hasHelmetBox = hasHelmetBox
         self.tag = tag
     }
-    
 }
