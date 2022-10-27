@@ -11,7 +11,7 @@ import CoreLocation
 final class MapViewModel {
     private var manager: NetworkManager
     private var scooters: [Vehicle]?
-    private var annotations: [MapPin]?
+    var annotations: [MapPin]?
     private var currentLocation: CLLocationCoordinate2D? {
         didSet {
             updateLocationHandler?(currentLocation)
@@ -37,25 +37,41 @@ final class MapViewModel {
         setupLocationManagerBindings()
     }
     
-    func fetchVehicles() {
+    func fetchVehicles(completion: @escaping ([Vehicle]?, NetworkError?) -> Void) {
         let request = VehiclesRequest.fetchVehicles
-        manager.execute(request: request, resultType: FetchVehiclesResponse.self) {[weak self] result in
+        manager.execute(request: request, resultType: FetchVehiclesResponse.self) { result in
             switch result {
             case .success(let data):
                 guard let data = data else {
+                    completion(nil, .noData)
                     return
                 }
-                
-                self?.scooters = data.data
-                self?.annotations = data.data.enumerated().map { (index, element) in
-                    return MapPin(long: element.attributes.lng, lat: element.attributes.lat, title: element.id, batteryLevel: element.attributes.batteryLevel, maxSpeend: element.attributes.maxSpeed, hasHelmetBox: element.attributes.hasHelmetBox, tag: index)
-                }
-                
-                self?.updateMapHandler?(self?.annotations)
-                
+                completion(data.data, nil)
             case .failure(let error):
-                self?.showErrorHandler?("Error", error.localizedDescription)
+                completion(nil, error)
             }
+        }
+    }
+    
+    func fetchVehicles(completion: (() -> Void)? = nil) {
+        fetchVehicles {[weak self] vehicles, error in
+            guard error == nil else {
+                self?.showErrorHandler?("Error", error!.localizedDescription)
+                return
+            }
+            
+            guard let vehicles = vehicles else {
+                self?.showErrorHandler?("Error", "An error has occured, please try again later!")
+                return
+            }
+            
+            self?.scooters = vehicles
+            self?.annotations = vehicles.enumerated().map { (index, element) in
+                return MapPin(long: element.attributes.lng, lat: element.attributes.lat, title: element.id, batteryLevel: element.attributes.batteryLevel, maxSpeend: element.attributes.maxSpeed, hasHelmetBox: element.attributes.hasHelmetBox)
+            }
+            
+            self?.updateMapHandler?(self?.annotations)
+            completion?()
         }
     }
     

@@ -13,14 +13,12 @@ class MapPin: NSObject, MKAnnotation {
     var batteryLevel: Int?
     var maxSpeed: Int?
     var hasHelmetBox: Bool?
-    var tag: Int = 0
     
-    init(long: Double, lat: Double, title: String?, batteryLevel: Int?, maxSpeend: Int?, hasHelmetBox: Bool?, tag: Int = 0) {
+    init(long: Double, lat: Double, title: String?, batteryLevel: Int?, maxSpeend: Int?, hasHelmetBox: Bool?) {
         self.coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         self.title = title
         self.batteryLevel = batteryLevel
         self.maxSpeed = maxSpeend
         self.hasHelmetBox = hasHelmetBox
-        self.tag = tag
     }
 }
